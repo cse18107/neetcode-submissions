@@ -1,0 +1,48 @@
+class Solution {
+    /**
+     * @param {number} numCourses
+     * @param {number[][]} prerequisites
+     * @return {number[]}
+     */
+    findOrder(numCourses, prerequisites) {
+        let depArr = Array.from({ length: numCourses }, () => []);;
+   
+        for(let i=0;i<prerequisites.length;i++){
+  
+            depArr[prerequisites[i][1]].push(prerequisites[i][0]);
+
+        }
+        
+        let degree = new Array(numCourses).fill(0);
+        
+        for(let i=0;i<depArr.length;i++){
+            for(let j=0;j<depArr[i].length;j++){
+                
+                degree[depArr[i][j]]++;
+            }
+        }
+     
+        let queue = [];
+        for(let i=0;i<depArr.length;i++){
+            if(degree[i]===0){
+                queue.push(i);
+            }
+        }
+        let ans = [];
+        while(queue.length>0){
+            let course = queue.pop();
+            ans.push(course);
+            for(let i=0;i<depArr[course].length;i++){
+                let ind = depArr[course][i];
+                degree[ind]--;
+                if(degree[ind]===0){
+                    queue.push(ind);
+                }
+            }
+        }
+        for(let i=0;i<degree.length;i++){
+            if(degree[i]>0)return [];
+        }
+        return ans;
+    }
+}
